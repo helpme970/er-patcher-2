@@ -6,7 +6,7 @@ import argparse
 from pathlib import Path
 import struct
 import re
-from shutil import rmtree
+from shutil import rmtree, copy
 import os
 import time
 
@@ -27,7 +27,10 @@ def cleanup(game_dir_patched):
 
 if __name__ == "__main__":
 
-    patcher_args = sys.argv[1:sys.argv.index("--")]
+    if "--" in sys.argv:
+        patcher_args = sys.argv[1:sys.argv.index("--")]
+    else:
+        patcher_args = sys.argv[1:]
 
     parser = argparse.ArgumentParser(description="Patch Elden Ring executable and launch it without EAC.")
 
@@ -42,6 +45,7 @@ if __name__ == "__main__":
     parser.add_argument("-a", "--increase-animation-distance", action='store_true', help="Increase animation distance.")
     parser.add_argument("-s", "--skip-intro", action='store_true', help="Skip intro logos.")
     parser.add_argument("-f", "--remove-60hz-fullscreen", action='store_true', help="Remove 60hz lock in fullscreen.")
+    parser.add_argument("-p", "--permanent", action='store_true', help="Make the patches permanently.")
     patch = parser.parse_args(patcher_args)
 
     if patch.with_eac and patch.executable != "eldenring.exe":
@@ -130,43 +134,57 @@ if __name__ == "__main__":
         else:
             print("er-patcher: remove_60hz_fullscreen pattern scan failed")
 
-    game_dir_patched = Path("er-patcher-tmp")
+    if patch.permanent:
+        # create backup of eldenring.exe
+        copy("eldenring.exe", "eldenring.exe.bak") 
 
-    # make sure a fresh directory is used
-    cleanup(game_dir_patched)
+        if patch.with_eac:
+            exe = "eldenring.exe"
+        else:
+            exe = "start_protected_game.exe"
 
-    if not game_dir_patched.is_dir():
-        game_dir_patched.mkdir()
+        # patch elden ring
+        with open(exe, "wb") as f:
+            f.write(bytes.fromhex(exe_hex))
 
-    with open(game_dir_patched / "eldenring.exe", "wb") as f:
-        f.write(bytes.fromhex(exe_hex))
+    else:
+        game_dir_patched = Path("er-patcher-tmp")
 
-    del exe_hex
+        # make sure a fresh directory is used
+        cleanup(game_dir_patched)
 
-    # recreate game directory tree in game_dir_patched
-    game_dirs = [d for d in game_dir.rglob("*") if d.is_dir()]
-    for d in game_dirs:
-        if d == game_dir_patched:
-            continue
-        if not (game_dir_patched / d).is_dir():
-            (game_dir_patched / d).mkdir(parents=True)
+        if not game_dir_patched.is_dir():
+            game_dir_patched.mkdir()
 
-    # hard link game files to game_dir_patched; symbolic links would be easier
-    # to handle but by default windows 10 doesn't allow them
-    game_files = [f for f in game_dir.rglob("*") if f.is_file()]
-    for f in game_files:
-        if f.name in ["eldenring.exe", "er-patcher"]:
-            continue
-        if not (game_dir_patched / f).is_file():
-            if sys.version_info.minor >= 10:
-                (game_dir_patched / f).hardlink_to(f)
-            else:
-                f.link_to(game_dir_patched / f)
+        with open(game_dir_patched / "eldenring.exe", "wb") as f:
+            f.write(bytes.fromhex(exe_hex))
 
-    # start patched exe directly to avoid EAC
-    steam_cmd = sys.argv[1 + sys.argv.index("--"):]
-    steam_cmd[-1] = Path(steam_cmd[-1]).parent.absolute() / game_dir_patched / ("start_protected_game.exe" if patch.with_eac else patch.executable)
-    subprocess.run(steam_cmd, cwd=steam_cmd[-1].parent.absolute())
+        del exe_hex
 
-    # try to remove game_dir_patched
-    cleanup(game_dir_patched)
+        # recreate game directory tree in game_dir_patched
+        game_dirs = [d for d in game_dir.rglob("*") if d.is_dir()]
+        for d in game_dirs:
+            if d == game_dir_patched:
+                continue
+            if not (game_dir_patched / d).is_dir():
+                (game_dir_patched / d).mkdir(parents=True)
+
+        # hard link game files to game_dir_patched; symbolic links would be easier
+        # to handle but by default windows 10 doesn't allow them
+        game_files = [f for f in game_dir.rglob("*") if f.is_file()]
+        for f in game_files:
+            if f.name in ["eldenring.exe", "er-patcher"]:
+                continue
+            if not (game_dir_patched / f).is_file():
+                if sys.version_info.minor >= 10:
+                    (game_dir_patched / f).hardlink_to(f)
+                else:
+                    f.link_to(game_dir_patched / f)
+
+        # start patched exe directly to avoid EAC
+        steam_cmd = sys.argv[1 + sys.argv.index("--"):]
+        steam_cmd[-1] = Path(steam_cmd[-1]).parent.absolute() / game_dir_patched / ("start_protected_game.exe" if patch.with_eac else patch.executable)
+        subprocess.run(steam_cmd, cwd=steam_cmd[-1].parent.absolute())
+
+        # try to remove game_dir_patched
+        cleanup(game_dir_patched)
