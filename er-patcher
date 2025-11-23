@@ -135,12 +135,11 @@ if __name__ == "__main__":
             print("er-patcher: remove_60hz_fullscreen pattern scan failed")
 
     if patch.permanent:
-        # create backup of eldenring.exe
-        copy("eldenring.exe", "eldenring.exe.bak") 
-
         if patch.with_eac:
+            copy("eldenring.exe", "eldenring.exe.bak")
             exe = "eldenring.exe"
         else:
+            copy("start_protected_game.exe", "start_protected_game.exe.bak")
             exe = "start_protected_game.exe"
 
         # patch elden ring
