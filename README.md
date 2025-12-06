@@ -58,7 +58,7 @@ Note: There might be some distros (e.g. older Ubuntu releases) that launch pytho
 ## Troubleshooting
 If you have issues, verify your game files and make sure that no other patch is applied to Elden Ring.
 
-## Features
+## Options
 
 | Argument                                | Description                                                                                               |
 | --------------------------------------- | --------------------------------------------------------------------------------------------------------- |
