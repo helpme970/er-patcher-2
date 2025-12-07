@@ -42,6 +42,8 @@ if __name__ == "__main__":
     parser.add_argument("-s", "--skip-intro", action='store_true', help="Skip intro logos.")
     parser.add_argument("-f", "--remove-60hz-fullscreen", action='store_true', help="Remove 60hz lock in fullscreen.")
     parser.add_argument("-p", "--permanent", action='store_true', help="Make the patches permanently.")
+    parser.add_argument("-q", "--quick-respawn", action='store_true', help="Respawn a few seconds faster.")
+    parser.add_argument("-e", "--player-camera", action='store_true', help="Always center camera to player.")
     patch = parser.parse_args(patcher_args)
 
     if "--" in sys.argv and not patch.permanent:
@@ -55,6 +57,26 @@ if __name__ == "__main__":
     game_dir = Path(".")
     with open(game_dir / "eldenring.exe", "rb") as f:
         exe_hex = f.read().hex()
+
+    if patch.quick_respawn:
+        r_pattern = "74 .. f3 0f 10 19".replace(" ", "")
+        if (res := re.search(r_pattern, exe_hex)) is not None:
+            r_addr = res.span()[0]
+            r_patch = "eb".replace(" ", "")
+            exe_hex = exe_hex[:r_addr] + r_patch + exe_hex[r_addr + len(r_patch):]
+            print("\033[92m✓ er-patcher: quick respawn")
+        else:
+            print("\033[91m✗ er-patcher: quick respawn pattern scan failed")
+
+    if patch.player_camera:
+        r_pattern = "66 0f 7f 07 f3 0f 10 ab".replace(" ", "")
+        if (res := re.search(r_pattern, exe_hex)) is not None:
+            r_addr = res.span()[0]
+            r_patch = "90 90 90 90".replace(" ", "")
+            exe_hex = exe_hex[:r_addr] + r_patch + exe_hex[r_addr + len(r_patch):]
+            print("\033[92m✓ er-patcher: center camera to player")
+        else:
+            print("\033[91m✗ er-patcher: center camera to player pattern scan failed")
 
     if patch.rate != 60 and patch.rate > 0:
         r_pattern = "c7 43 1c 89 88 88 3c eb 6d 89 73 18 eb c7 89 73 18".replace(" ", "")
