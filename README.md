@@ -1,6 +1,5 @@
 # Elden Ring Proton Patcher 2
 
-
 A tool aimed at enhancing the experience when playing the game by patching the executable so you don't need to mess with .dlls.
 
 > Please note that all these patches may won't work after the release of Elden Ring on the Switch 2, because they might change the engine in a way that breaks this tool. I'll try to update and make it working again if this happens.
@@ -15,6 +14,8 @@ A tool aimed at enhancing the experience when playing the game by patching the e
 - disable chromatic abberation
 - increase animation distance
 - skip intro logos
+- always center camera to player
+- faster respawn
 
 > All features are Tested with Elden Ring version 1.16.1
 
@@ -74,7 +75,6 @@ If you have issues, verify your game files and make sure that no other patch is 
 | `-s` or `--skip-intro`                  | Skip intro logos at game start.                                                                           |
 | `-f` or `--remove-60hz-fullscreen`      | Remove the 60Hz limit in fullscreen<br>mode (not needed with proton).                                     |
 
-
 ## Windows Support
 
 The patcher works just as well on windows. The following launch option line works in case you e.g. installed Python from Microsoft Store:
@@ -100,3 +100,5 @@ When the game is launched through steam, the tool creates a patched version of `
 - [DarkSouls3RemoveIntroScreens](https://github.com/bladecoding/DarkSouls3RemoveIntroScreens): intro logo skip
 - [EldenRingMods](https://github.com/techiew/EldenRingMods) + [EldenRingFpsUnlockAndMore](https://github.com/uberhalit/EldenRingFpsUnlockAndMore)
   - disable rune loss
+- [Center Camera on Player](https://github.com/ImAxel0/EldenRing-CenterCameraOnPlayer-Mod/)
+- [Faster Respawn](https://github.com/ImAxel0/EldenRing-FasterRespawn-Mod/)
