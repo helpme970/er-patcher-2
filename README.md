@@ -16,6 +16,8 @@ A tool aimed at enhancing the experience when playing the game by patching the e
 - skip intro logos
 - always center camera to player
 - faster respawn
+- fix camera (disables the camera reset when trying to lock-on with no target in range)
+- disable camera auto rotate
 
 > All features are Tested with Elden Ring version 1.16.1
 
