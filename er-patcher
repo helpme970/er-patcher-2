@@ -44,6 +44,11 @@ if __name__ == "__main__":
     parser.add_argument("-p", "--permanent", action='store_true', help="Make the patches permanently.")
     parser.add_argument("-q", "--quick-respawn", action='store_true', help="Respawn a few seconds faster.")
     parser.add_argument("-e", "--player-camera", action='store_true', help="Always center camera to player.")
+    parser.add_argument("-y", "--fix-camera", action='store_true', help="Disable camera reset.")
+    parser.add_argument("-b", "--no-rotate-camera", action='store_true', help="Disable camera auto rotate.")
+
+    parser.add_argument("-g", "--gamepath", action='store', type=str, default=".", help="Path to game.")
+
     patch = parser.parse_args(patcher_args)
 
     if "--" in sys.argv and not patch.permanent:
@@ -54,9 +59,29 @@ if __name__ == "__main__":
     if patch.with_eac and patch.executable != "eldenring.exe":
         exit("er-patcher: --with-eac is mutually exclusive with --executable")
 
-    game_dir = Path(".")
+    game_dir = Path(patch.gamepath)
     with open(game_dir / "eldenring.exe", "rb") as f:
         exe_hex = f.read().hex()
+
+    if patch.fix_camera:
+        r_pattern = "80 .. .. .. .. .. 00 74 .. .. 8b .. e8 .. .. .. .. eb .. 0f 28 .. .. .. .. .. .. 8d".replace(" ", "")
+        if (res := re.search(r_pattern, exe_hex)) is not None:
+            r_addr = res.span()[0] + 7
+            r_patch = "eb".replace(" ", "")
+            exe_hex = exe_hex[:r_addr] + r_patch + exe_hex[r_addr + len(r_patch):]
+            print("\033[92m✓ er-patcher: fix camera")
+        else:
+            print("\033[91m✗ er-patcher: fix camera pattern scan failed")
+
+    if patch.no_rotate_camera:
+        r_pattern = "0f 29 .. .. .. .. .. .. 0f 28 .. .. 8b .. e8 .. .. .. .. .. 0f b6 .. .. .. .. 0f 28 .. .. 8b .. e8 .. .. .. .. .. 8b .. .. 0f 28 .. .. 8b .. e8 .. .. .. .. .. 8d .. .. .. 8b .. .. 8d".replace(" ", "")
+        if (res := re.search(r_pattern, exe_hex)) is not None:
+            r_addr = res.span()[0]
+            r_patch = "90 90 90 90 90 90 90".replace(" ", "")
+            exe_hex = exe_hex[:r_addr] + r_patch + exe_hex[r_addr + len(r_patch):]
+            print("\033[92m✓ er-patcher: no rotate camera")
+        else:
+            print("\033[91m✗ er-patcher: no rotate camera pattern scan failed")
 
     if patch.quick_respawn:
         r_pattern = "74 .. f3 0f 10 19".replace(" ", "")
