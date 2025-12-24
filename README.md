@@ -87,7 +87,7 @@ If you have issues, verify your game files and make sure that no other patch is 
 | `-p` or `--permanent`                   | Make the patches permanent.                                                                               |
 | `-q` or `--quick-respawn`               | Respawn a few seconds faster.                                                                             |
 | `-e` or `--player-camera`               | Always center camera to player.                                                                           |
-| `-y` or `--fix-camera`                  | Disables the camera reset when trying to<br>lock-on with no target in range.                              |
+| `-y` or `--fix-camera`                  | Disables the camera reset when trying to<br>lock-on with no target in range. (bugged sometimes)           |
 | `-b` or `--no-rotate-camera`            | Disable camera auto rotate.                                                                               |
 | `-g path/to/game` or `--gamepath path/to/game`| Specify path to game.                                                                               |
 
