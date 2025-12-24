@@ -46,7 +46,6 @@ if __name__ == "__main__":
     parser.add_argument("-e", "--player-camera", action='store_true', help="Always center camera to player.")
     parser.add_argument("-y", "--fix-camera", action='store_true', help="Disable camera reset.")
     parser.add_argument("-b", "--no-rotate-camera", action='store_true', help="Disable camera auto rotate.")
-
     parser.add_argument("-g", "--gamepath", action='store', type=str, default=".", help="Path to game.")
 
     patch = parser.parse_args(patcher_args)
@@ -59,7 +58,10 @@ if __name__ == "__main__":
     if patch.with_eac and patch.executable != "eldenring.exe":
         exit("er-patcher: --with-eac is mutually exclusive with --executable")
 
+    if patch.gamepath[-1] == "/":
+        patch.gamepath = patch.gamepath[:len(patch.gamepath)-1]
     game_dir = Path(patch.gamepath)
+    
     with open(game_dir / "eldenring.exe", "rb") as f:
         exe_hex = f.read().hex()
 
@@ -198,16 +200,21 @@ if __name__ == "__main__":
                 print("eldenring.exe backuped as eldenring.exe.bak")
             else:
                 exit("\033[91meldenring.exe does not exist")
-            exe = "eldenring.exe"
+            exe = f"{game_dir}/eldenring.exe"
+            print("\033[93mEAC enabled, you may be banned with this patches")
         else:
             if os.path.exists("start_protected_game.exe"):
                 copy("start_protected_game.exe", "start_protected_game.exe.bak")
                 print("start_protected_game.exe backuped as start_protected_game.exe.bak")
-            exe = "start_protected_game.exe"
+            exe = f"{game_dir}/start_protected_game.exe"
+            print("\033[92mEAC disabled, you cannot go online on official servers")
 
         # patch elden ring
         with open(exe, "wb") as f:
             f.write(bytes.fromhex(exe_hex))
+        del exe_hex
+
+        print(f"Patches permanently written to {exe}")
     else:
         game_dir_patched = Path("er-patcher-tmp")
 
