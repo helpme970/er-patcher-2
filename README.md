@@ -25,6 +25,7 @@ A tool aimed at enhancing the experience when playing the game by patching the e
 
 <details>
 <summary><h2>Changes made to er-patcher</h2></summary>
+
 - allow one time/permanent patch
 - always center camera to player
 - faster respawn
