@@ -41,7 +41,7 @@ if __name__ == "__main__":
     parser.add_argument("-a", "--increase-animation-distance", action='store_true', help="Increase animation distance.")
     parser.add_argument("-s", "--skip-intro", action='store_true', help="Skip intro logos.")
     parser.add_argument("-f", "--remove-60hz-fullscreen", action='store_true', help="Remove 60hz lock in fullscreen.")
-    parser.add_argument("-p", "--permanent", action='store_true', help="Make the patches permanently.")
+    parser.add_argument("-p", "--permanent", action='store_true', help="Make the patches permanent.")
     parser.add_argument("-q", "--quick-respawn", action='store_true', help="Respawn a few seconds faster.")
     parser.add_argument("-e", "--player-camera", action='store_true', help="Always center camera to player.")
     parser.add_argument("-y", "--fix-camera", action='store_true', help="Disable camera reset.")
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     if "--" in sys.argv and not patch.permanent:
         patcher_args = sys.argv[1:sys.argv.index("--")]
     elif "--" in sys.argv and patch.permanent:
-        print(f"\033[91mpermanent patch cannot be combined with temporary patch. Remove -p | --permanent or {sys.argv[sys.argv.index("--"):]}")
+        print(f"\033[91mpermanent patch cannot be combined with temporary patch. Remove -p | --permanent or {sys.argv[sys.argv.index('--'):]}")
 
     if patch.with_eac and patch.executable != "eldenring.exe":
         exit("er-patcher: --with-eac is mutually exclusive with --executable")
