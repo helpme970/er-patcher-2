@@ -44,7 +44,7 @@ A tool aimed at enhancing the experience when playing the game by patching the e
 2. In steam, set the game launch options to `python er-patcher ARGS -- %command%` See [Features](#features) for available options.
   - Example for the Steam Deck for one (permanent) patch:
 
-    `python er-patcher --all --rate 30 -p -- %command%`
+    `python er-patcher --all --rate 30 -p`
     
   - Example:
 
