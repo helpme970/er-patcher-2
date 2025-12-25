@@ -120,6 +120,7 @@ When the game is launched through steam, the tool creates a patched version of `
 - [DarkSouls3RemoveIntroScreens](https://github.com/bladecoding/DarkSouls3RemoveIntroScreens): intro logo skip
 - [EldenRingMods](https://github.com/techiew/EldenRingMods) + [EldenRingFpsUnlockAndMore](https://github.com/uberhalit/EldenRingFpsUnlockAndMore)
   - disable rune loss
+  - camera fix + no rotate camera
 - [Center Camera on Player](https://github.com/ImAxel0/EldenRing-CenterCameraOnPlayer-Mod/)
 - [Faster Respawn](https://github.com/ImAxel0/EldenRing-FasterRespawn-Mod/)
 - let me know if I forgot your contribution
