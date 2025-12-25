@@ -10,9 +10,9 @@ from shutil import rmtree, copy
 import os
 import time
 
-def cleanup(game_dir_patched):
-    if game_dir_patched.exists():
-        eldenring_path = game_dir_patched / "eldenring.exe"
+def cleanup(game_dipatched):
+    if game_dipatched.exists():
+        eldenring_path = game_dipatched / "eldenring.exe"
         while eldenring_path.exists():
             try:
                 os.remove(eldenring_path)
@@ -23,7 +23,7 @@ def cleanup(game_dir_patched):
             except Exception as e:
                 print(f"er-patcher: could not delete {eldenring_path}: {e}")
                 break
-        rmtree(game_dir_patched)
+        rmtree(game_dipatched)
 
 if __name__ == "__main__":
     patcher_args = sys.argv[1:]
@@ -54,11 +54,13 @@ if __name__ == "__main__":
         patcher_args = sys.argv[1:sys.argv.index("--")]
     elif "--" in sys.argv and patch.permanent:
         print(f"\033[91mpermanent patch cannot be combined with temporary patch. Remove -p | --permanent or {sys.argv[sys.argv.index('--'):]}")
+    else:
+        exit("\033[91mYou did not specify if the patch is temporary or permanent")
 
     if patch.with_eac and patch.executable != "eldenring.exe":
         exit("er-patcher: --with-eac is mutually exclusive with --executable")
 
-    if patch.gamepath[-1] == "/":
+    if patch.gamepath[-1] == "/" or patch.gamepath[-1] == "\\":
         patch.gamepath = patch.gamepath[:len(patch.gamepath)-1]
     game_dir = Path(patch.gamepath)
     
@@ -66,93 +68,99 @@ if __name__ == "__main__":
         exe_hex = f.read().hex()
 
     if patch.fix_camera:
-        r_pattern = "80 .. .. .. .. .. 00 74 .. .. 8b .. e8 .. .. .. .. eb .. 0f 28 .. .. .. .. .. .. 8d".replace(" ", "")
-        if (res := re.search(r_pattern, exe_hex)) is not None:
-            r_addr = res.span()[0] + 7
-            r_patch = "eb".replace(" ", "")
-            exe_hex = exe_hex[:r_addr] + r_patch + exe_hex[r_addr + len(r_patch):]
-            print("\033[92m✓ er-patcher: fix camera")
+        pattern = "80 .. .. .. .. .. 00 74 .. .. 8b .. e8 .. .. .. .. eb .. 0f 28 .. .. .. .. .. .. 8d".replace(" ", "")
+        if (res := re.search(pattern, exe_hex)) is not None:
+            addr = res.span()[0] + 7
+            patch = "eb".replace(" ", "")
+            exe_hex = exe_hex[:addr] + patch + exe_hex[addr + len(patch):]
+
+            orig = "74"
+            if exe_hex[addr:addr + len(patch)] == orig:
+                exe_hex = exe_hex[:addr] + patch + exe_hex[addr + len(patch):]
+                print("\033[92m✓ er-patcher: fix camera")
+            else:
+                print("\033[91m✗ er-patcher: fix camera pattern does not match")
         else:
             print("\033[91m✗ er-patcher: fix camera pattern scan failed")
 
     if patch.no_rotate_camera:
-        r_pattern = "0f 29 .. .. .. .. .. .. 0f 28 .. .. 8b .. e8 .. .. .. .. .. 0f b6 .. .. .. .. 0f 28 .. .. 8b .. e8 .. .. .. .. .. 8b .. .. 0f 28 .. .. 8b .. e8 .. .. .. .. .. 8d .. .. .. 8b .. .. 8d".replace(" ", "")
-        if (res := re.search(r_pattern, exe_hex)) is not None:
-            r_addr = res.span()[0]
-            r_patch = "90 90 90 90 90 90 90".replace(" ", "")
-            exe_hex = exe_hex[:r_addr] + r_patch + exe_hex[r_addr + len(r_patch):]
+        pattern = "0f 29 .. .. .. .. .. .. 0f 28 .. .. 8b .. e8 .. .. .. .. .. 0f b6 .. .. .. .. 0f 28 .. .. 8b .. e8 .. .. .. .. .. 8b .. .. 0f 28 .. .. 8b .. e8 .. .. .. .. .. 8d .. .. .. 8b .. .. 8d".replace(" ", "")
+        if (res := re.search(pattern, exe_hex)) is not None:
+            addr = res.span()[0]
+            patch = "90 90 90 90 90 90 90".replace(" ", "")
+            exe_hex = exe_hex[:addr] + patch + exe_hex[addr + len(patch):]
             print("\033[92m✓ er-patcher: no rotate camera")
         else:
             print("\033[91m✗ er-patcher: no rotate camera pattern scan failed")
 
     if patch.quick_respawn:
-        r_pattern = "74 .. f3 0f 10 19".replace(" ", "")
-        if (res := re.search(r_pattern, exe_hex)) is not None:
-            r_addr = res.span()[0]
-            r_patch = "eb".replace(" ", "")
-            exe_hex = exe_hex[:r_addr] + r_patch + exe_hex[r_addr + len(r_patch):]
+        pattern = "74 .. f3 0f 10 19".replace(" ", "")
+        if (res := re.search(pattern, exe_hex)) is not None:
+            addr = res.span()[0]
+            patch = "eb".replace(" ", "")
+            exe_hex = exe_hex[:addr] + patch + exe_hex[addr + len(patch):]
             print("\033[92m✓ er-patcher: quick respawn")
         else:
             print("\033[91m✗ er-patcher: quick respawn pattern scan failed")
 
     if patch.player_camera:
-        r_pattern = "66 0f 7f 07 f3 0f 10 ab".replace(" ", "")
-        if (res := re.search(r_pattern, exe_hex)) is not None:
-            r_addr = res.span()[0]
-            r_patch = "90 90 90 90".replace(" ", "")
-            exe_hex = exe_hex[:r_addr] + r_patch + exe_hex[r_addr + len(r_patch):]
+        pattern = "66 0f 7f 07 f3 0f 10 ab".replace(" ", "")
+        if (res := re.search(pattern, exe_hex)) is not None:
+            addr = res.span()[0]
+            patch = "90 90 90 90".replace(" ", "")
+            exe_hex = exe_hex[:addr] + patch + exe_hex[addr + len(patch):]
             print("\033[92m✓ er-patcher: center camera to player")
         else:
             print("\033[91m✗ er-patcher: center camera to player pattern scan failed")
 
     if patch.rate != 60 and patch.rate > 0:
-        r_pattern = "c7 43 1c 89 88 88 3c eb 6d 89 73 18 eb c7 89 73 18".replace(" ", "")
-        if (res := re.search(r_pattern, exe_hex)) is not None:
-            r_addr = res.span()[0] + 6
-            r_patch = struct.pack('<f', 1 / patch.rate).hex()
-            exe_hex = exe_hex[:r_addr] + r_patch + exe_hex[r_addr + len(r_patch):]
+        pattern = "c7 43 1c 89 88 88 3c eb 6d 89 73 18 eb c7 89 73 18".replace(" ", "")
+        if (res := re.search(pattern, exe_hex)) is not None:
+            addr = res.span()[0] + 6
+            patch = struct.pack('<f', 1 / patch.rate).hex()
+            exe_hex = exe_hex[:addr] + patch + exe_hex[addr + len(patch):]
             print("\033[92m✓ er-patcher: refresh rate")
         else:
             print("\033[91m✗ er-patcher: refresh rate pattern scan failed")
 
     if patch.disable_rune_loss:
-        rl_pattern = "41 .. 01 48 .. .. e8 .. .. .. .. 48 .. .. .. .. 32 c0".replace(" ", "")
-        if (res := re.search(rl_pattern, exe_hex)) is not None:
-            rl_addr = res.span()[0] + 12
-            rl_patch = "90 90 90 90 90".replace(" ", "")  # NOP
-            exe_hex = exe_hex[:rl_addr] + rl_patch + exe_hex[rl_addr + len(rl_patch):]
+        pattern = "41 .. 01 48 .. .. e8 .. .. .. .. 48 .. .. .. .. 32 c0".replace(" ", "")
+        if (res := re.search(pattern, exe_hex)) is not None:
+            addr = res.span()[0] + 12
+            patch = "90 90 90 90 90".replace(" ", "")  # NOP
+            exe_hex = exe_hex[:addr] + patch + exe_hex[addr + len(patch):]
             print("\033[92m✓ er-patcher: disable rune loss")
         else:
             print("\033[91m✗ er-patcher: disable rune loss pattern scan failed")
 
     if patch.ultrawide or patch.all:
-        uw_pattern = "74 4f 45 8b 94 cc".replace(" ", "")
-        if (res := re.search(uw_pattern, exe_hex)) is not None:
-            uw_addr = res.span()[0]
-            uw_patch = "eb"
-            exe_hex = exe_hex[:uw_addr] + uw_patch + exe_hex[uw_addr + len(uw_patch):]
+        pattern = "74 4f 45 8b 94 cc".replace(" ", "")
+        if (res := re.search(pattern, exe_hex)) is not None:
+            addr = res.span()[0]
+            patch = "eb"
+            exe_hex = exe_hex[:addr] + patch + exe_hex[addr + len(patch):]
             print("\033[92m✓ er-patcher: ultrawide")
         else:
             print("\033[91m✗ er-patcher: ultrawide pattern scan failed")
 
     if patch.disable_vignette or patch.all:
-        v_pattern = 'f3 0f 10 .. .. f3 0f 59 .. .. .. .. .. e8 .. .. .. .. f3 41 0f .. .. f3 45 0f .. .. 4c 8d .. .. .. .. .. .. 48'.replace(" ", "")
-        if (res := re.search(v_pattern, exe_hex)) is not None:
-            v_addr = res.span()[0] + 46
-            v_patch = "f3 0f 5c c0 90".replace(" ", "")  # SUBSS XMM0,XMM0; NOP;  all NOP does work too
-            exe_hex = exe_hex[:v_addr] + v_patch + exe_hex[v_addr + len(v_patch):]
+        pattern = 'f3 0f 10 .. .. f3 0f 59 .. .. .. .. .. e8 .. .. .. .. f3 41 0f .. .. f3 45 0f .. .. 4c 8d .. .. .. .. .. .. 48'.replace(" ", "")
+        if (res := re.search(pattern, exe_hex)) is not None:
+            addr = res.span()[0] + 46
+            patch = "f3 0f 5c c0 90".replace(" ", "")  # SUBSS XMM0,XMM0; NOP;  all NOP does work too
+            exe_hex = exe_hex[:addr] + patch + exe_hex[addr + len(patch):]
             print("\033[92m✓ er-patcher: disable vignette")
         else:
             print("\033[91m✗ er-patcher: disable vignette pattern scan failed")
 
     if patch.disable_ca or patch.all:
-        ca_pattern = "0f 11 43 60 48 8d 8b 80 00 00 00 0f 10 87 a0 00 00 00 0f 11 41 f0 48 8d 87 b0 00 00 00 0f 10 08 0f 11 09".replace(" ", "")
-        if (res := re.search(ca_pattern, exe_hex)) is not None:
-            ca_addr = res.span()[0] + 94
-            ca_orig = "0f 11 49 20".replace(" ", "")
-            ca_patch = "66 0f ef c9".replace(" ", "")  # PXOR XMM1,XMM1
-            if exe_hex[ca_addr:ca_addr + len(ca_patch)] == ca_orig:
-                exe_hex = exe_hex[:ca_addr] + ca_patch + exe_hex[ca_addr + len(ca_patch):]
+        pattern = "0f 11 43 60 48 8d 8b 80 00 00 00 0f 10 87 a0 00 00 00 0f 11 41 f0 48 8d 87 b0 00 00 00 0f 10 08 0f 11 09".replace(" ", "")
+        if (res := re.search(pattern, exe_hex)) is not None:
+            addr = res.span()[0] + 94
+            orig = "0f 11 49 20".replace(" ", "")
+            patch = "66 0f ef c9".replace(" ", "")  # PXOR XMM1,XMM1
+            if exe_hex[addr:addr + len(patch)] == orig:
+                exe_hex = exe_hex[:addr] + patch + exe_hex[addr + len(patch):]
                 print("\033[92m✓ er-patcher: disable ca")
             else:
                 print("\033[91m✗ er-patcher: disable ca pattern does not match")
@@ -160,35 +168,35 @@ if __name__ == "__main__":
             print("\033[91m✗ er-patcher: disable ca pattern scan failed")
 
     if patch.increase_animation_distance or patch.all:
-        iad_pattern = "e8 .. .. .. .. 0f 28 .. 0f 28 .. e8 .. .. .. .. f3 0f .. .. 0f 28 .. f3 41 0f 5e 4c 24 54".replace(" ", "")
-        if (res := re.search(iad_pattern, exe_hex)) is not None:
-            iad_addr = res.span()[0] + 46
-            iad_patch = "0f 57 c9 66 0f ef c9".replace(" ", "")  # DIVSS XMM1,dword ptr [R12 + 0x54]  ->  XORPS XMM1,XMM1; PXOR XMM1,XMM1
-            exe_hex = exe_hex[:iad_addr] + iad_patch + exe_hex[iad_addr + len(iad_patch):]
+        pattern = "e8 .. .. .. .. 0f 28 .. 0f 28 .. e8 .. .. .. .. f3 0f .. .. 0f 28 .. f3 41 0f 5e 4c 24 54".replace(" ", "")
+        if (res := re.search(pattern, exe_hex)) is not None:
+            addr = res.span()[0] + 46
+            patch = "0f 57 c9 66 0f ef c9".replace(" ", "")  # DIVSS XMM1,dword ptr [R12 + 0x54]  ->  XORPS XMM1,XMM1; PXOR XMM1,XMM1
+            exe_hex = exe_hex[:addr] + patch + exe_hex[addr + len(patch):]
             print("\033[92m✓ er-patcher: increase animation distance")
         else:
             print("\033[91m✗ er-patcher: increase animation distance pattern scan failed")
 
     if patch.skip_intro or patch.all:
-        si_pattern = "80 bf b8 00 00 00 00 74 53 48".replace(" ", "")
-        if (res := re.search(si_pattern, exe_hex)) is not None:
-            si_addr = res.span()[0] + 14
-            si_patch = "90 90".replace(" ", "")
-            exe_hex = exe_hex[:si_addr] + si_patch + exe_hex[si_addr + len(si_patch):]
+        pattern = "80 bf b8 00 00 00 00 74 53 48".replace(" ", "")
+        if (res := re.search(pattern, exe_hex)) is not None:
+            addr = res.span()[0] + 14
+            patch = "90 90".replace(" ", "")
+            exe_hex = exe_hex[:addr] + patch + exe_hex[addr + len(patch):]
             print("\033[92m✓ er-patcher: skip intro")
         else:
             print("\033[91m✗ er-patcher: skip intro pattern scan failed")
 
     if patch.remove_60hz_fullscreen or patch.all:
-        fs_pattern = "eb .. c7 .. .. 3c 00 00 00 c7 .. .. 01 00 00 00".replace(" ", "")
-        if (res := re.search(fs_pattern, exe_hex)) is not None:
-            fs_addr = res.span()[0] + 10
-            fs_patch = "00"
-            exe_hex = exe_hex[:fs_addr] + fs_patch + exe_hex[fs_addr + len(fs_patch):]
+        pattern = "eb .. c7 .. .. 3c 00 00 00 c7 .. .. 01 00 00 00".replace(" ", "")
+        if (res := re.search(pattern, exe_hex)) is not None:
+            addr = res.span()[0] + 10
+            patch = "00"
+            exe_hex = exe_hex[:addr] + patch + exe_hex[addr + len(patch):]
             
-            fs_addr_2 = res.span()[0] + 24
-            fs_patch_2 = "00"
-            exe_hex = exe_hex[:fs_addr_2] + fs_patch_2 + exe_hex[fs_addr_2 + len(fs_patch_2):]
+            addr_2 = res.span()[0] + 24
+            patch_2 = "00"
+            exe_hex = exe_hex[:addr_2] + patch_2 + exe_hex[addr_2 + len(patch_2):]
             print("\033[92m✓ er-patcher: remove 60hz fullscreen")
         else:
             print("\033[91m✗ er-patcher: remove 60hz fullscreen pattern scan failed")
@@ -216,43 +224,43 @@ if __name__ == "__main__":
 
         print(f"Patches permanently written to {exe}")
     else:
-        game_dir_patched = Path("er-patcher-tmp")
+        game_dipatched = Path(f"{game_dir}/er-patcher-tmp/")
 
         # make sure a fresh directory is used
-        cleanup(game_dir_patched)
+        cleanup(game_dipatched)
 
-        if not game_dir_patched.is_dir():
-            game_dir_patched.mkdir()
+        if not game_dipatched.is_dir():
+            game_dipatched.mkdir()
 
-        with open(game_dir_patched / "eldenring.exe", "wb") as f:
+        with open(game_dipatched / "eldenring.exe", "wb") as f:
             f.write(bytes.fromhex(exe_hex))
 
         del exe_hex
 
-        # recreate game directory tree in game_dir_patched
+        # recreate game directory tree in game_dipatched
         game_dirs = [d for d in game_dir.rglob("*") if d.is_dir()]
         for d in game_dirs:
-            if d == game_dir_patched:
+            if d == game_dipatched:
                 continue
-            if not (game_dir_patched / d).is_dir():
-                (game_dir_patched / d).mkdir(parents=True)
+            if not (game_dipatched / d).is_dir():
+                (game_dipatched / d).mkdir(parents=True)
 
-        # hard link game files to game_dir_patched; symbolic links would be easier
+        # hard link game files to game_dipatched; symbolic links would be easier
         # to handle but by default windows 10 doesn't allow them
         game_files = [f for f in game_dir.rglob("*") if f.is_file()]
         for f in game_files:
             if f.name in ["eldenring.exe", "er-patcher"]:
                 continue
-            if not (game_dir_patched / f).is_file():
+            if not (game_dipatched / f).is_file():
                 if sys.version_info.minor >= 10:
-                    (game_dir_patched / f).hardlink_to(f)
+                    (game_dipatched / f).hardlink_to(f)
                 else:
-                    f.link_to(game_dir_patched / f)
+                    f.link_to(game_dipatched / f)
 
         # start patched exe directly to avoid EAC
         steam_cmd = sys.argv[1 + sys.argv.index("--"):]
-        steam_cmd[-1] = Path(steam_cmd[-1]).parent.absolute() / game_dir_patched / ("start_protected_game.exe" if patch.with_eac else patch.executable)
+        steam_cmd[-1] = Path(steam_cmd[-1]).parent.absolute() / game_dipatched / ("start_protected_game.exe" if patch.with_eac else patch.executable)
         subprocess.run(steam_cmd, cwd=steam_cmd[-1].parent.absolute())
 
-        # try to remove game_dir_patched
-        cleanup(game_dir_patched)
+        # try to remove game_dipatched
+        cleanup(game_dipatched)
