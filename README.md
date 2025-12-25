@@ -41,7 +41,7 @@ A tool aimed at enhancing the experience when playing the game by patching the e
 ## Usage
 
 1. Copy the file `er-patcher` to the game directory or specify the path to the game via the `--gamepath` option.
-2. In steam, set the game launch options to `python er-patcher ARGS -- %command%` See [Features](#features) for available options.
+2. In steam, set the game launch options to `python er-patcher ARGS -- %command%` or use permanent patch option. See [Features](#features) for available options.
   - Example for the Steam Deck for one (permanent) patch:
 
     `python er-patcher --all --rate 30 -p`
@@ -53,6 +53,10 @@ A tool aimed at enhancing the experience when playing the game by patching the e
   - Example using the [Seamless Co-op](https://www.nexusmods.com/eldenring/mods/510) mod:
 
     `python er-patcher --all --executable ersc_launcher.exe -- %command%`
+
+  - Example using the [Seamless Co-op](https://www.nexusmods.com/eldenring/mods/510) mod with permanent patch:
+
+    `python er-patcher --all -p --with-eac`
 
   - Example using [MangoHud](https://github.com/flightlessmango/MangoHud) and wine fullscreen FSR:
 
@@ -87,7 +91,7 @@ If you have issues, verify your game files and make sure that no other patch is 
 | `-p` or `--permanent`                   | Make the patches permanent.                                                                               |
 | `-q` or `--quick-respawn`               | Respawn a few seconds faster.                                                                             |
 | `-e` or `--player-camera`               | Always center camera to player.                                                                           |
-| `-y` or `--fix-camera`                  | Disables the camera reset when trying to<br>lock-on with no target in range. (bugged sometimes)           |
+| `-y` or `--fix-camera`                  | Disables the camera reset when trying to<br>lock-on with no target in range.                              |
 | `-b` or `--no-rotate-camera`            | Disable camera auto rotate.                                                                               |
 | `-g path/to/game` or `--gamepath path/to/game`| Specify path to game.                                                                               |
 
