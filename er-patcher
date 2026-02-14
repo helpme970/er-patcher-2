@@ -9,6 +9,7 @@ import re
 from shutil import rmtree, copy
 import os
 import time
+import hashlib
 
 def cleanup(game_dir_patched):
     if game_dir_patched.exists():
@@ -77,6 +78,9 @@ if __name__ == "__main__":
         exit("\033[91mCould not find eldenring.exe\033[m")
 
     exe_hex = open(game_dir / "eldenring.exe", "rb").read().hex()
+
+    if hashlib.sha256(exe_hex.encode("utf-8")).hexdigest() != "dd314fa2638e728153081856c1b96d8f7442b88b1e70221407d13c9a730064cf":
+        print("\033[91mWarning: eldenring.exe is modified, this can lead to unexpected behavior\033[m")
 
     if patches.fix_camera:
         pattern = "80 .. .. .. .. .. 00 74 .. .. 8b .. e8 .. .. .. .. eb .. 0f 28 .. .. .. .. .. .. 8d".replace(" ", "")
