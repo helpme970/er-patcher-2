@@ -82,7 +82,7 @@ if __name__ == "__main__":
     if hashlib.sha256(exe_hex.encode("utf-8")).hexdigest() != "dd314fa2638e728153081856c1b96d8f7442b88b1e70221407d13c9a730064cf":
         print("\033[91mWarning: eldenring.exe is modified, this can lead to unexpected behavior\033[m")
 
-    if patches.fix_camera:
+    if patches.fix_camera or patches.all:
         pattern = "80 .. .. .. .. .. 00 74 .. .. 8b .. e8 .. .. .. .. eb .. 0f 28 .. .. .. .. .. .. 8d".replace(" ", "")
         if (res := re.search(pattern, exe_hex)) is not None:
             addr = res.span()[0] + 14
@@ -106,7 +106,7 @@ if __name__ == "__main__":
         else:
             print("\033[91m✗ er-patcher: no rotate camera pattern scan failed\033[m")
 
-    if patches.quick_respawn:
+    if patches.quick_respawn or patches.all:
         pattern = "74 .. f3 0f 10 19".replace(" ", "")
         if (res := re.search(pattern, exe_hex)) is not None:
             addr = res.span()[0]
@@ -180,7 +180,7 @@ if __name__ == "__main__":
         else:
             print("\033[91m✗ er-patcher: disable ca pattern scan failed\033[m")
 
-    if patches.increase_animation_distance or patches.all:
+    if patches.increase_animation_distance:
         pattern = "e8 .. .. .. .. 0f 28 .. 0f 28 .. e8 .. .. .. .. f3 0f .. .. 0f 28 .. f3 41 0f 5e 4c 24 54".replace(" ", "")
         if (res := re.search(pattern, exe_hex)) is not None:
             addr = res.span()[0] + 46
@@ -222,7 +222,7 @@ if __name__ == "__main__":
             else:
                 exit("\033[91meldenring.exe does not exist\033[m")
             exe = f"{game_dir}/eldenring.exe"
-            print("\033[93mEAC enabled, you may be banned with this patches\033[m")
+            print("\033[93mEAC enabled, you might get banned with this patches\033[m")
         else:
             if os.path.exists(f"{game_dir}/start_protected_game.exe") and not os.path.exists(f"{game_dir}/start_protected_game.exe.bak"):
                 copy(f"{game_dir}/start_protected_game.exe", f"{game_dir}/start_protected_game.exe.bak")
@@ -268,6 +268,9 @@ if __name__ == "__main__":
                     (game_dir_patched / f).hardlink_to(f)
                 else:
                     f.link_to(game_dir_patched / f)
+        
+        if patches.with_eac:
+            print("\033[93mEAC enabled, you might get banned with this patches\033[m")
 
         # start patched exe directly to avoid EAC
         steam_cmd = sys.argv[1 + sys.argv.index("--"):]
