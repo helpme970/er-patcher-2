@@ -81,7 +81,7 @@ If you have issues, verify your game files and make sure that no other patch is 
 | `-x EXE` or `--executable EXE`          | The executable to launch, relative to the games folder. Mutually exclusive with `--with-eac`.             |
 | `--with-eac`                            | Run game with EAC (Use it at your own risk). Mutually exclusive with `--executable`.                      |
 | `--disable-rune-loss`                   | Disable losing runes upon death.                                                                          |
-| `--all`                                 | Enable all options except `--rate`, `--executable`, and gameplay changes like `--disable-rune-loss`.      |
+| `--all`                                 | Enable all options except `--rate`, `--executable`, `--no-rotate-camera`, `--player-camera`, `--increase-animation-distance` and gameplay changes like `--disable-rune-loss`.      |
 | `-u` or `--ultrawide`                   | Remove black bars. (recommended for any monitor other than 16:9)                                          |
 | `-v` or `--disable-vignette`            | Remove the vignette overlay.                                                                              |
 | `-c` or `--disable-ca`                  | Disable chromatic abberation.                                                                             |
