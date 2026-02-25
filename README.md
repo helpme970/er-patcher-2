@@ -4,6 +4,8 @@ A tool aimed at enhancing the experience when playing the game by patching the e
 
 > Please note that all these patches may won't work after the release of Elden Ring on the Switch 2, because they might change the engine in a way that breaks this tool. I'll try to update and make it working again if this happens.
 
+> This Programm fully supports Linux/Wine
+
 ## Features
 - change fps
 - remove 60hz lock in fullscreen
