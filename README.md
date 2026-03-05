@@ -94,7 +94,7 @@ If you have issues, verify your game files and make sure that no other patch is 
 | `-q` or `--quick-respawn`               | Respawn a few seconds faster.                                                                             |
 | `-e` or `--player-camera`               | Always center camera to player.                                                                           |
 | `-y` or `--fix-camera`                  | Disables the camera reset when trying to lock-on with no target in range.                                 |
-| `-b` or `--no-rotate-camera`            | Disable camera auto rotate.                                                                               |
+| `-b` or `--no-rotate-camera`            | Disable camera auto rotate (recommended for keyboard and mouse players).                                                                               |
 | `-g path/to/game` or `--gamepath path/to/game`| Specify path to game.                                                                               |
 
 ## Windows Support
