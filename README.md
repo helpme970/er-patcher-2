@@ -9,7 +9,7 @@ A tool aimed at enhancing the experience when playing the game by patching the e
 ## Features
 - change fps
 - remove 60hz lock in fullscreen
-- run without Easy Anti Cheat
+- run without Easy Anti Cheat (possibly better performance, forces Elden Ring to offline mode)
 - disable rune loss
 - remove black bars (useful for ultrawidescreens)
 - disable vignette
@@ -36,6 +36,14 @@ A tool aimed at enhancing the experience when playing the game by patching the e
 - debug output
 - colored output
 </details>
+
+## Comparison
+
+| Feature | Deactivated | Activated |
+| - | - | - |
+| remove black bars | ![Alt text](https://staticdelivery.nexusmods.com/mods/4333/images/175/175-1647789453-1210578406.jpeg) | ![](https://staticdelivery.nexusmods.com/mods/4333/images/175/175-1647789463-716068087.jpeg) |
+| disable vignette | ![](https://staticdelivery.nexusmods.com/mods/4333/images/177/177-1647285384-1561731653.jpeg) | ![](https://staticdelivery.nexusmods.com/mods/4333/images/177/177-1647285408-685355022.jpeg) |
+| remove chromatic abberation | ![](https://staticdelivery.nexusmods.com/mods/4333/images/179/179-1647471075-1130980920.png) | ![](https://staticdelivery.nexusmods.com/mods/4333/images/179/179-1647471084-1078155335.png) |
 
 ## Dependencies
 - Python >= 3.8
