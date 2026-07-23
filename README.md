@@ -2,7 +2,7 @@
 
 A tool aimed at enhancing the experience when playing the game by patching the executable so you don't need to mess with .dlls.
 
-> Please note that all these patches may won't work after the release of Elden Ring on the Switch 2, because they might change the engine in a way that breaks this tool. I'll try to update and make it working again if this happens.
+> Please note that all these patches may won't work after the release of Elden Ring on the Switch 2, because they might change the engine in a way that breaks this tool. I'll try to update and make it working again if this happens. But for now everything works fine.
 
 > This Programm fully supports Linux/Wine
 
