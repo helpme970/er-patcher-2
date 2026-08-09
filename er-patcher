@@ -27,7 +27,7 @@ def cleanup(game_dir_patched):
         rmtree(game_dir_patched)
 
 if __name__ == "__main__":
-    patcher_args = sys.argv[1:]
+    patcher_args = sys.argv[1:sys.argv.index("--")]
 
     parser = argparse.ArgumentParser(description="Patch Elden Ring executable and launch it without EAC.")
 
