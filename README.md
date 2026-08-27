@@ -2,8 +2,6 @@
 
 A tool aimed at enhancing the experience when playing the game by patching the executable so you don't need to mess with .dlls.
 
-> Please note that all these patches may won't work after the release of Elden Ring on the Switch 2, because they might change the engine in a way that breaks this tool. I'll try to update and make it working again if this happens. But for now everything works fine.
-
 > This Programm fully supports Linux/Wine
 
 ## Features
@@ -21,7 +19,7 @@ A tool aimed at enhancing the experience when playing the game by patching the e
 - fix camera (disables the camera reset when trying to lock-on with no target in range)
 - disable camera auto rotate
 
-> All features are Tested with Elden Ring version 1.16.1
+> All features are Tested with Elden Ring version 1.17
 
 > working with and without Shadow of the Erdtree dlc
 
