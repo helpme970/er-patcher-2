@@ -84,7 +84,7 @@ if __name__ == "__main__":
 
     exe_hex = open(game_dir / "eldenring.exe", "rb").read().hex()
 
-    if hashlib.sha256(exe_hex.encode("utf-8")).hexdigest() != "dd314fa2638e728153081856c1b96d8f7442b88b1e70221407d13c9a730064cf":
+    if hashlib.sha256(exe_hex.encode("utf-8")).hexdigest() != "cf2797fab10fbbb52f73f96e6d8d7a4fabbfb8e6a772e78bcd24aef58c8967d4":
         print("\033[91mWarning: eldenring.exe is modified, this can lead to unexpected behavior\033[m")
 
     if patches.fix_camera or patches.all:
