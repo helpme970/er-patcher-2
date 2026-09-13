@@ -48,7 +48,8 @@ A tool aimed at enhancing the experience when playing the game by patching the e
 
 ## Usage
 
-1. Copy the file `er-patcher` to the game directory or specify the path to the game via the `--gamepath` option.
+1. Download er-patcher
+2. Copy the file `er-patcher` to the game directory or specify the path to the game via the `--gamepath` option.
 2. In steam, set the game launch options to `python er-patcher ARGS -- %command%` or use permanent patch option. See [Features](#features) for available options.
   - Example for the Steam Deck for one (permanent) patch:
 
@@ -74,7 +75,7 @@ A tool aimed at enhancing the experience when playing the game by patching the e
 
     `ENABLE_GAMESCOPE_WSI=1 DXVK_HDR=1 gamescope -W 3440 -H 1440 -f -r 165 --hdr-enabled -- python er-patcher --all --rate 165 -- %command%`
     
-3. Launch the game through steam. `er-patcher` automatically launches a patched version of `eldenring.exe` with EAC disabled.
+3. Launch the game through steam. `er-patcher` automatically launches a patched version of `eldenring.exe`.
 
 Note: There might be some distros (e.g. older Ubuntu releases) that launch python 2 instead of 3 when running `python`. In that case you'll need to replace `python` with `python3` in the launch option line. 
 
