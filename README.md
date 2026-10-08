@@ -48,7 +48,8 @@ A tool aimed at enhancing the experience when playing the game by patching the e
 
 ## Usage
 
-1. Download er-patcher
+1. Download and install [Python](https://www.python.org/)
+1. Download [er-patcher](https://raw.githubusercontent.com/helpme970/er-patcher-2/refs/heads/main/er-patcher)
 2. Copy the file `er-patcher` to the game directory or specify the path to the game via the `--gamepath` option.
 2. In steam, set the game launch options to `python er-patcher ARGS -- %command%` or use permanent patch option. See [Features](#features) for available options.
   - Example for the Steam Deck for one (permanent) patch:
