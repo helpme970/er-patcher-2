@@ -84,7 +84,7 @@ if __name__ == "__main__":
 
     exe_hex = open(game_dir / "eldenring.exe", "rb").read().hex()
 
-    if hashlib.sha256(exe_hex.encode("utf-8")).hexdigest() != "cf2797fab10fbbb52f73f96e6d8d7a4fabbfb8e6a772e78bcd24aef58c8967d4":
+    if hashlib.sha256(exe_hex.encode("utf-8")).hexdigest() != "d0b43e858310253a9b67911a28458d8b9d03e8933a2a73496123604d0c15fd42":
         print("\033[91mWarning: eldenring.exe is modified, this can lead to unexpected behavior\033[m")
 
     if patches.fix_camera or patches.all:
@@ -125,6 +125,7 @@ if __name__ == "__main__":
         pattern = "66 0f 7f 07 f3 0f 10 ab".replace(" ", "")
         if (res := re.search(pattern, exe_hex)) is not None:
             addr = res.span()[0]
+            #addr = res.span()[0] + 12 # offset for generic pattern
             patch = "90 90 90 90".replace(" ", "")
             exe_hex = exe_hex[:addr] + patch + exe_hex[addr + len(patch):]
             print("\033[92m✓ er-patcher: center camera to player\033[m")
@@ -133,9 +134,11 @@ if __name__ == "__main__":
 
     if patches.rate != 60 and patches.rate > 0:
         pattern = "c7 43 1c 89 88 88 3c eb 6d 89 73 18 eb c7 89 73 18".replace(" ", "")
+        #pattern = "89 73 .. c7 .. .. .. .. .. .. eb .. 89 73".replace(" ", "") # generic pattern
         if (res := re.search(pattern, exe_hex)) is not None:
             addr = res.span()[0] + 6
             patch = struct.pack('<f', 1 / patches.rate).hex()
+            #patch = "90 90 90 90 90".replace(" ", "") # possibly unlimited fps?
             exe_hex = exe_hex[:addr] + patch + exe_hex[addr + len(patch):]
             print("\033[92m✓ er-patcher: refresh rate\033[m")
         else:
@@ -212,9 +215,10 @@ if __name__ == "__main__":
             patch = "00"
             exe_hex = exe_hex[:addr] + patch + exe_hex[addr + len(patch):]
             
-            addr_2 = res.span()[0] + 24
-            patch_2 = "00"
-            exe_hex = exe_hex[:addr_2] + patch_2 + exe_hex[addr_2 + len(patch_2):]
+            # wrong because division by zero?
+            # addr_2 = res.span()[0] + 24
+            # patch_2 = "00"
+            # exe_hex = exe_hex[:addr_2] + patch_2 + exe_hex[addr_2 + len(patch_2):]
             print("\033[92m✓ er-patcher: remove 60hz fullscreen\033[m")
         else:
             print("\033[91m✗ er-patcher: remove 60hz fullscreen pattern scan failed\033[m")
