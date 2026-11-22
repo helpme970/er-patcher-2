@@ -87,7 +87,7 @@ If you have issues, verify your game files and make sure that no other patch is 
 
 | Argument                                | Description                                                                                               |
 | --------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `-r RATE` or `--rate RATE`              | Set a custom framerate limit (default: 60). (Can be lowered for better performance)                       |
+| `-r RATE` or `--rate RATE`              | Set a custom framerate limit (default: 60). (Can be lowered for better performance) (needs -f when the fps should be higher in fullscreen mode)                       |
 | `-x EXE` or `--executable EXE`          | The executable to launch, relative to the games folder. Mutually exclusive with `--with-eac`.             |
 | `--with-eac`                            | Run game with EAC (Use it at your own risk). Mutually exclusive with `--executable`.                      |
 | `--disable-rune-loss`                   | Disable losing runes upon death.                                                                          |
@@ -97,7 +97,7 @@ If you have issues, verify your game files and make sure that no other patch is 
 | `-c` or `--disable-ca`                  | Disable chromatic abberation.                                                                             |
 | `-a` or `--increase-animation-distance` | Fix low frame rate animations at screen edges or for distant entities.                                    |
 | `-s` or `--skip-intro`                  | Skip intro logos at game start.                                                                           |
-| `-f` or `--remove-60hz-fullscreen`      | Remove the 60Hz limit in fullscreen mode (not needed with proton).                                        |
+| `-f` or `--remove-60hz-fullscreen`      | Remove the 60Hz limit in fullscreen mode (needs `DXVK_CONFIG="dxgi.syncInterval=0"` to be set as environment variable when patching permanently).                                        |
 | `-p` or `--permanent`                   | Make the patches permanent.                                                                               |
 | `-q` or `--quick-respawn`               | Respawn a few seconds faster.                                                                             |
 | `-e` or `--player-camera`               | Always center camera to player.                                                                           |
@@ -133,4 +133,6 @@ When the game is launched through steam, the tool creates a patched version of `
   - camera fix + no rotate camera
 - [Center Camera on Player](https://github.com/ImAxel0/EldenRing-CenterCameraOnPlayer-Mod/)
 - [Faster Respawn](https://github.com/ImAxel0/EldenRing-FasterRespawn-Mod/)
+- [cpseybold](https://github.com/cpseybold) with their [fullscreen fix](https://github.com/gurrgur/er-patcher/pull/87)
+- everyone who reports bugs
 - let me know if I forgot your contribution
