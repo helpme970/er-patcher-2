@@ -19,9 +19,9 @@ A tool aimed at enhancing the experience when playing the game by patching the e
 - fix camera (disables the camera reset when trying to lock-on with no target in range)
 - disable camera auto rotate
 
-> All features are Tested with Elden Ring version 1.17
+> All features are Tested with Elden Ring version 1.17.2
 
-> working with and without Shadow of the Erdtree dlc
+> works with and without Shadow of the Erdtree DLC and The Tarnished Pack DLC
 
 <details>
 <summary><h2>Changes made to er-patcher</h2></summary>
