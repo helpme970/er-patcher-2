@@ -5,7 +5,7 @@ A tool aimed at enhancing the experience when playing the game by patching the e
 > This Programm fully supports Linux/Wine
 
 ## Features
-- change fps
+- change fps limit or uncap it
 - remove 60hz lock in fullscreen
 - run without Easy Anti Cheat (possibly better performance, forces Elden Ring to offline mode)
 - disable rune loss
@@ -87,7 +87,7 @@ If you have issues, verify your game files and make sure that no other patch is 
 
 | Argument                                | Description                                                                                               |
 | --------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `-r RATE` or `--rate RATE`              | Set a custom framerate limit (default: 60). (Can be lowered for better performance) (needs -f when the fps should be higher in fullscreen mode)                       |
+| `-r RATE` or `--rate RATE`              | Set a custom framerate limit, when set to 0 it will be uncapped (default: 60). (Can be lowered for better performance) (needs -f when the fps should be higher than 60 in fullscreen mode)                       |
 | `-x EXE` or `--executable EXE`          | The executable to launch, relative to the games folder. Mutually exclusive with `--with-eac`.             |
 | `--with-eac`                            | Run game with EAC (Use it at your own risk). Mutually exclusive with `--executable`.                      |
 | `--disable-rune-loss`                   | Disable losing runes upon death.                                                                          |
