@@ -75,6 +75,12 @@ A tool aimed at enhancing the experience when playing the game by patching the e
   - Example for enabling HDR using gamescope on Linux (reported to work on Plasma 6.1):
 
     `ENABLE_GAMESCOPE_WSI=1 DXVK_HDR=1 gamescope -W 3440 -H 1440 -f -r 165 --hdr-enabled -- python er-patcher --all --rate 165 -- %command%`
+
+    
+  - Example for unlimited fps with permanent patch:
+
+    `python er-patcher --all --rate 0`
+    Launch options in Steam: `DXVK_CONFIG="dxgi.syncInterval=0" %command%`
     
 3. Launch the game through steam. `er-patcher` automatically launches a patched version of `eldenring.exe`.
 
