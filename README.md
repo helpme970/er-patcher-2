@@ -80,6 +80,7 @@ A tool aimed at enhancing the experience when playing the game by patching the e
   - Example for unlimited fps with permanent patch:
 
     `python er-patcher --all --rate 0`
+    
     Launch options in Steam: `DXVK_CONFIG="dxgi.syncInterval=0" %command%`
     
 3. Launch the game through steam. `er-patcher` automatically launches a patched version of `eldenring.exe`.
